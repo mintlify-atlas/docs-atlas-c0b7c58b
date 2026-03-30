@@ -1,0 +1,114 @@
+---
+title: "Authentication"
+description: "Create a SmartMove account, sign in, and recover your password. Authentication is powered by Supabase and uses your email address and a password."
+keywords: ["login", "sign up", "register", "password", "authentication", "account", "Supabase"]
+---
+
+SmartMove uses email and password authentication. You do not need a social account or a third-party login — just an email address and a password you choose.
+
+<Note>
+  SmartMove works fully without an account. You only need to sign in if you want to sync your data across multiple devices or keep a cloud backup of your favorites.
+</Note>
+
+## Creating an account
+
+<Steps>
+  <Step title="Open the sign-up screen">
+    Tap the **Account** tab in the bottom navigation. If you are not signed in, you will see a prompt to create an account or log in. Tap **Create account**, or navigate directly to `/signup`.
+  </Step>
+  <Step title="Enter your name">
+    Type your name in the **Name** field. This is how SmartMove will greet you on the account screen.
+  </Step>
+  <Step title="Enter your email address">
+    Type your email address in the **Email** field. Use an address you have access to — you may need it to recover your account.
+  </Step>
+  <Step title="Choose a password">
+    Enter a password in the **Password** field. SmartMove shows a strength indicator as you type. A strong password includes:
+    - At least 8 characters
+    - At least one uppercase letter
+    - At least one number
+    - At least one special character (e.g. `!`, `@`, `#`)
+
+    Confirm your password in the **Confirm password** field.
+  </Step>
+  <Step title="Accept the terms">
+    Check the checkbox to accept the terms of service before submitting.
+  </Step>
+  <Step title="Tap Create account">
+    SmartMove creates your account and signs you in immediately. Any data already saved on your device is preserved and uploaded to your new account.
+  </Step>
+</Steps>
+
+## Signing in
+
+<Steps>
+  <Step title="Open the login screen">
+    Tap the **Account** tab and then tap **Sign in**, or navigate directly to `/login`.
+  </Step>
+  <Step title="Enter your email and password">
+    Type your email address and password into the respective fields. Tap the eye icon to show or hide the password as you type.
+  </Step>
+  <Step title="Tap Sign in">
+    SmartMove signs you in and redirects you to the home screen. Your cloud data syncs to your device automatically in the background.
+  </Step>
+</Steps>
+
+<Tip>
+  After signing in, all your saved data from the cloud is merged with what is already on your device. Nothing is overwritten — if your cloud data and your device data differ, SmartMove picks the most complete version.
+</Tip>
+
+## Resetting a forgotten password
+
+<Steps>
+  <Step title="Go to the login screen">
+    Navigate to `/login` or tap **Sign in** from the account screen.
+  </Step>
+  <Step title="Tap Forgot password?">
+    Below the sign-in form, tap the **Forgot password?** link. This takes you to `/forgot-password`.
+  </Step>
+  <Step title="Enter your email address">
+    Type the email address associated with your account and tap **Send reset link**.
+  </Step>
+  <Step title="Check your inbox">
+    SmartMove sends a password reset email to that address. Open the email and tap the link inside.
+
+    <Warning>
+      The reset link expires after a short time. If it has expired, return to the forgot password screen and request a new one.
+    </Warning>
+  </Step>
+  <Step title="Set a new password">
+    The reset link takes you to `/reset-password`. Enter and confirm your new password, then save it. You are signed in automatically once the password is updated.
+  </Step>
+</Steps>
+
+## Signing out
+
+Open the **Account** tab and scroll to the bottom of the screen. Tap **Sign out**. Your locally saved data remains on the device after you sign out — it is not deleted.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Do I need an account to use SmartMove?">
+    No. Every feature — route search, live departures, favorites, commuter mode, the live map — works without signing in. An account is only needed if you want your data synced across multiple devices.
+  </Accordion>
+  <Accordion title="What happens to my local data when I sign in?">
+    When you sign in for the first time, SmartMove checks whether your account already has cloud data. If the cloud is empty, your existing local data (stops, favorites, commuter routes, preferences) is uploaded to your account. If the cloud already has data, that data is downloaded and merged with what is on your device.
+  </Accordion>
+  <Accordion title="Can I change my email address or name?">
+    Name and email changes are not currently available from within the app. Contact support or manage your account directly via your Supabase dashboard if you need to update these details.
+  </Accordion>
+  <Accordion title="Is my password stored securely?">
+    Yes. Passwords are hashed by Supabase and never stored in plain text. SmartMove never has direct access to your password after you submit it.
+  </Accordion>
+</AccordionGroup>
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Account Overview" icon="user" href="/account/overview">
+    What you get with a SmartMove account and where to find each setting.
+  </Card>
+  <Card title="Cloud Sync" icon="cloud" href="/account/cloud-sync">
+    What data syncs to your account and how the sync process works.
+  </Card>
+</CardGroup>

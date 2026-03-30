@@ -1,0 +1,109 @@
+---
+title: "Departure Board"
+description: "Real-time departures for any stop in the South Tyrol network, with delay indicators, platform information, and saved stations."
+keywords: ["departure board", "real-time departures", "delays", "platform", "stops", "South Tyrol"]
+---
+
+The departure board shows live departures for any stop in the South Tyrol network. You can search for a stop by name, view incoming services with delay information, and save your most-used stops so they are always one tap away.
+
+## Accessing the departure board
+
+You can reach the departure board in two ways:
+
+- **From the home screen** — The departure board widget appears in the middle section of the home screen. It shows your saved stations by default.
+- **From the live map** — Tap any stop marker to open the stop info panel, then tap **View full board** to open that stop's departure board.
+
+## Searching for a stop
+
+<Steps>
+  <Step title="Open the departure board">
+    Navigate to the departure board from the home screen or map.
+  </Step>
+  <Step title="Tap the search field">
+    The search bar at the top of the board accepts stop names. Start typing and autocomplete suggestions appear as you type, searching both German and Italian stop names.
+  </Step>
+  <Step title="Select a stop">
+    Tap a suggestion to load that stop's departures. The board immediately fetches live data from the EFA API.
+  </Step>
+</Steps>
+
+## Reading the departure list
+
+Each row in the departure board represents one scheduled service.
+
+| Column | What it shows |
+|--------|--------------|
+| **Line** | The line number or service identifier, colour-coded by mode (train in red, bus in blue, cable car in purple) |
+| **Direction** | The terminus or final destination of the service |
+| **Time** | Scheduled departure time in 24-hour format |
+| **Delay** | Minutes late, if the service is delayed |
+| **Platform** | Bay or platform number, where the network provides it |
+| **Status** | On time, delayed, or cancelled |
+
+### Delay indicators
+
+- **No badge** — The service is running on time
+- **Amber badge** — The service is delayed by at least 1 minute; the badge shows the number of minutes late
+- **Red badge / Cancelled** — The service has been cancelled
+
+<Note>
+  Delay data is live and sourced from the EFA API. Delays are updated each time the board refreshes.
+</Note>
+
+## Filtering by transport mode
+
+Use the mode filter tabs at the top of the departure list to narrow results:
+
+- **All** — Shows every departure regardless of mode
+- **Train** — Shows only train services
+- **Bus** — Shows only bus services
+- **Cable car** — Shows only gondola and aerial tramway services
+
+## Auto-refresh
+
+The board automatically refreshes departure data at regular intervals so you always see the current state of the network. A refresh spinner indicates when new data is being fetched. You can also trigger a manual refresh by tapping the **refresh** icon.
+
+## Saving departure stations
+
+Save your most-used stops so they load instantly the next time you open the board.
+
+<Steps>
+  <Step title="Load a stop">
+    Search for and select the stop you want to save.
+  </Step>
+  <Step title="Save the station">
+    Tap the **pin** or **save** icon next to the stop name. The stop is added to your saved departure stations list.
+  </Step>
+  <Step title="Access saved stations">
+    Your saved stations appear as tabs or cards at the top of the departure board. Tap one to switch to it instantly without searching again.
+  </Step>
+  <Step title="Remove a saved station">
+    Swipe left on a saved station card or tap the remove icon to delete it from your saved list.
+  </Step>
+</Steps>
+
+<Tip>
+  Saved departure stations are stored locally on your device. If you are signed in, they sync to your account so the same stations appear on all your devices.
+</Tip>
+
+## Navigating between stops
+
+If you have multiple saved stations, use the arrow buttons to cycle through them, or tap any saved station tab directly. Each station remembers its own filter settings.
+
+## Planning a trip from a departure
+
+Tap any departure row to open trip planning options for that service. You can jump to the route detail view to see the full stop list for that service, or start a new route search with that stop pre-filled as your departure.
+
+## Related features
+
+<CardGroup cols={2}>
+  <Card title="Live Map" icon="map" href="/features/live-map">
+    Tap any stop on the map to open its departure board inline.
+  </Card>
+  <Card title="Route Search" icon="search" href="/features/route-search">
+    Plan a full connection from a stop to your destination.
+  </Card>
+  <Card title="Service Alerts" icon="triangle-alert" href="/features/service-alerts">
+    Check if disruptions affect the stops you use regularly.
+  </Card>
+</CardGroup>

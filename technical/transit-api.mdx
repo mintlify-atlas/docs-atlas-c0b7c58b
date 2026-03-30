@@ -1,0 +1,139 @@
+---
+title: "Transit API"
+description: "How SmartMove integrates with the South Tyrol EFA API: stop search, bilingual translation, transport modes, and response normalization."
+---
+
+All transit data in SmartMove comes from the South Tyrol transit authority's EFA API at `https://efa.sta.bz.it/apb`. The integration lives in `src/app/services/efa.ts`.
+
+## Base URL
+
+```
+https://efa.sta.bz.it/apb
+```
+
+No API key is required. All requests are made directly from the browser.
+
+## Stop search
+
+### `searchStopsEfa(query)`
+
+The primary autocomplete function. It searches for stops matching a query string and automatically adds bilingual translations so users get results regardless of whether they type in German or Italian.
+
+```typescript
+searchStopsEfa(query: string): Promise<EfaStop[]>
+```
+
+The function:
+1. Normalizes the query and looks up any known bilingual translations
+2. Builds a list of unique query variants (original + translated)
+3. Fires all variants in parallel via `searchSingleEfa()`
+4. Deduplicates results by stop ID and returns a flat list
+
+Minimum query length is 2 characters. Shorter queries return an empty array immediately.
+
+### `searchLocations(query)`
+
+A higher-level wrapper over `searchStopsEfa` that returns `GeocodingResult` objects suitable for dropdown suggestions:
+
+```typescript
+searchLocations(query: string): Promise<GeocodingResult[]>
+
+interface GeocodingResult {
+  name: string;
+  coords: { lat: number; lon: number };
+  type: 'stop' | 'station' | 'address';
+  gtfsId?: string;
+  distance?: number;
+}
+```
+
+## EfaStop type
+
+```typescript
+interface EfaStop {
+  id: string;       // stateless ID or coordinate-derived fallback
+  name: string;     // stop display name
+  type: string;     // 'stop', 'station', 'platform', or 'address'
+  lat: number;
+  lon: number;
+  distance?: number; // metres from search origin, if available
+}
+```
+
+## EFA endpoint
+
+Stop search hits the `XML_STOPFINDER_REQUEST` endpoint:
+
+```
+GET /apb/XML_STOPFINDER_REQUEST
+  ?outputFormat=JSON
+  &outputEncoding=UTF-8
+  &language={de|it}
+  &type_sf=any
+  &name_sf={query}
+```
+
+Each query is fired twice in parallel — once in German and once in Italian — to maximize result coverage. The `language` parameter controls the display language for stop names in the response.
+
+## Bilingual translation
+
+South Tyrol is officially bilingual (German and Italian). Stop names, city names, and transit facility names differ between languages. `efa.ts` ships a built-in translation map:
+
+| German | Italian |
+|--------|---------|
+| Bozen | Bolzano |
+| Meran | Merano |
+| Brixen | Bressanone |
+| Bruneck | Brunico |
+| Sterzing | Vipiteno |
+| Schlanders | Silandro |
+| Bahnhof | Stazione |
+| Busbahnhof | Autostazione |
+
+When the user types a word that matches any entry in this map, `searchStopsEfa` appends the translated variant as an additional query. Both variants run in parallel and results are merged by ID.
+
+```typescript
+// Example: typing "Bolzano" also searches "Bozen"
+// Example: typing "Bahnhof" also searches "Stazione"
+```
+
+Translation matching is case-insensitive and diacritic-insensitive. The replacement preserves the original casing of the typed text.
+
+## Transport modes
+
+The service layer maps EFA's internal mode codes to a normalized set used throughout the app:
+
+| Mode | Covers |
+|------|--------|
+| `RAIL` | SAD regional trains, Trenitalia |
+| `BUS` | SASA urban buses (Bolzano, Merano), SAD regional coaches |
+| `GONDOLA` | Cable cars and aerial tramways (Seilbahn) |
+| `WALK` | Walking segments between stops |
+
+## Language selection
+
+`efa.ts` reads the EFA language from `getEfaLanguage()`, which returns `'de'` or `'it'` based on the user's active locale:
+
+- German → `de`
+- Italian → `it`
+- English → `de` (fallback)
+- Ladin → `de` (fallback)
+
+When the EFA language is Italian, the service queries Italian first and German second. When it is German, the order is reversed. This ensures that the primary-language result takes precedence in the merged list.
+
+## Error handling
+
+`searchSingleEfa` wraps each request in a try/catch. If a request fails, it returns an empty array — the outer `searchStopsEfa` continues with results from whichever queries succeeded. No error is surfaced to the user for a failed autocomplete request.
+
+<Note>
+  The EFA API does not require authentication. All requests are made client-side directly from the browser. CORS is permitted by the server.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Architecture" icon="diagram-project" href="/technical/architecture">
+    How the EFA service fits into the overall app architecture.
+  </Card>
+  <Card title="Development setup" icon="terminal" href="/technical/development-setup">
+    Running SmartMove locally.
+  </Card>
+</CardGroup>

@@ -1,0 +1,86 @@
+---
+title: "Deployment"
+description: "How to deploy SmartMove to Vercel: build configuration, environment variables, and SPA routing setup."
+---
+
+SmartMove is deployed on Vercel. The build output is a static SPA in `dist/` that Vercel serves with a CDN.
+
+## Build
+
+```bash
+npm run build
+```
+
+Vite compiles the app and outputs to `dist/`. The build includes all assets, chunks, and an `index.html` entry point.
+
+## Deploy to Vercel
+
+<Steps>
+  <Step title="Import the repository">
+    In the [Vercel dashboard](https://vercel.com), click **Add New → Project** and import your SmartMoveNewUI repository.
+  </Step>
+  <Step title="Configure the build settings">
+    Vercel auto-detects Vite. Confirm these settings:
+
+    | Setting | Value |
+    |---------|-------|
+    | Framework preset | Vite |
+    | Build command | `npm run build` |
+    | Output directory | `dist` |
+    | Install command | `npm install` |
+  </Step>
+  <Step title="Add environment variables">
+    In **Settings → Environment Variables**, add:
+
+    | Variable | Value |
+    |----------|-------|
+    | `VITE_SUPABASE_URL` | Your Supabase project URL |
+    | `VITE_SUPABASE_ANON_KEY` | Your Supabase anon key |
+
+    Set both variables for the **Production**, **Preview**, and **Development** environments.
+  </Step>
+  <Step title="Configure SPA routing">
+    SmartMove uses client-side routing via React Router. Without a rewrite rule, Vercel returns a 404 for any URL other than `/`. Add a `vercel.json` to the project root:
+
+    ```json
+    {
+      "rewrites": [
+        { "source": "/(.*)", "destination": "/index.html" }
+      ]
+    }
+    ```
+
+    This tells Vercel to serve `index.html` for all routes, letting React Router handle navigation client-side.
+  </Step>
+  <Step title="Deploy">
+    Click **Deploy**. Vercel runs the build and publishes to a `.vercel.app` URL. Subsequent pushes to the main branch trigger automatic redeployments.
+  </Step>
+</Steps>
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | No | Supabase project URL. Required for cloud sync and authentication. |
+| `VITE_SUPABASE_ANON_KEY` | No | Supabase anon (public) key. Required for cloud sync and authentication. |
+
+<Note>
+  The app deploys and runs without these variables. Users can search routes, view departures, and save data locally. Cloud sync and account features are unavailable until the variables are set.
+</Note>
+
+## Preview deployments
+
+Vercel creates a preview deployment for every pull request. To test cloud sync features in previews, add the Supabase environment variables to the **Preview** environment in **Settings → Environment Variables**.
+
+## Custom domain
+
+To attach a custom domain, go to **Settings → Domains** in the Vercel project and follow the DNS configuration instructions. No changes to the app code are needed.
+
+<CardGroup cols={2}>
+  <Card title="Development setup" icon="terminal" href="/technical/development-setup">
+    Run SmartMove locally before deploying.
+  </Card>
+  <Card title="Architecture" icon="diagram-project" href="/technical/architecture">
+    Overview of the full stack.
+  </Card>
+</CardGroup>

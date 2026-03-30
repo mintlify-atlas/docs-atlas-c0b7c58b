@@ -1,0 +1,91 @@
+---
+title: "Cloud Sync"
+description: "When you sign in to SmartMove, your stops, routes, favorites, and preferences sync automatically across all your devices."
+keywords: ["cloud sync", "sync", "backup", "Supabase", "cross-device", "favorites", "preferences"]
+---
+
+Cloud sync keeps everything consistent when you use SmartMove on more than one device. Your saved data lives on your device first, and is mirrored to the cloud whenever you are signed in.
+
+<Note>
+  Cloud sync requires a SmartMove account. All features work fully without one — your data simply stays local. See [Authentication](/account/authentication) to create an account.
+</Note>
+
+## How sync works
+
+SmartMove treats your device as the immediate source of truth. Every time you save a stop, bookmark a route, or change a preference, it is written to your device first. If you are signed in, that change is pushed to the cloud at the same time.
+
+When you sign in on a new device, SmartMove downloads your cloud data and applies it locally. If the new device already has its own saved data and the cloud is empty, SmartMove uploads your local data to the cloud so nothing is lost.
+
+The sync is bidirectional: changes you make on any signed-in device flow up to the cloud and down to your other devices the next time they load.
+
+## What gets synced
+
+| Data | What it contains |
+|------|-----------------|
+| **Stops** | Recent stops you have searched, including which ones you have marked as favorites |
+| **Connections** | Recent route searches (from/to pairs), including favorited connections |
+| **Quick access** | Items you have pinned to your home screen (stops, lines, or routes) |
+| **Commuter routes** | Saved commuter mode shortcuts with full schedule data |
+| **Liked routes** | Routes you have bookmarked from search results |
+| **Active routes** | Routes you are currently following |
+| **Departure stations** | Stops you have saved to your departure board |
+| **Preferences** | Theme (light/dark/system), language, location sharing setting, analytics setting, notification preferences |
+
+<Tip>
+  Preferences sync means switching to dark mode on your phone automatically applies to SmartMove on your tablet or laptop the next time you sign in.
+</Tip>
+
+## When sync happens
+
+Sync runs at two moments:
+
+1. **On sign-in** — When you log in, SmartMove immediately pulls your cloud data down to the device and merges it with anything already stored locally.
+2. **On every data change** — Each time you save a stop, like a route, update a preference, or modify any synced item, the change is written to your device and pushed to the cloud in the background.
+
+You do not need to manually trigger a sync. It happens automatically and silently.
+
+## Reactive updates
+
+SmartMove uses a custom event system to keep every part of the interface up to date as data changes. When a sync operation brings new data down from the cloud, relevant screens refresh automatically — you do not need to navigate away and back to see the updated state.
+
+The following events drive reactive UI updates:
+
+| Event | What triggers it |
+|-------|-----------------|
+| `recent-stops-changed` | A stop is added, removed, or favorited |
+| `recent-connections-changed` | A connection is added or favorited |
+| `liked-routes-changed` | A route is bookmarked or removed |
+| `quick-access-changed` | A quick access item is pinned or unpinned |
+| `commuter-routes-changed` | A commuter route is saved or deleted |
+| `departure-stations-changed` | A departure board station is saved or removed |
+| `theme-changed` | The theme is updated |
+| `language-changed` | The language setting is updated |
+| `settings-changed` | Any other preference is changed |
+
+## Data privacy and security
+
+All cloud data is stored in a Supabase PostgreSQL database. Every table in the database uses Row Level Security (RLS), which means your data is completely isolated from other users — you can only ever read or write your own records. No other user or external service can access your saved stops, routes, or preferences.
+
+<Warning>
+  If you delete your account, all cloud data associated with it is permanently removed. Your local data on each device remains intact until you clear it manually.
+</Warning>
+
+## Using SmartMove offline
+
+SmartMove continues to work when you have no internet connection. Your locally stored stops, favorites, commuter routes, and preferences are always available. Live departure data and route search require a connection to the EFA transit API, but everything you have already saved is accessible offline.
+
+When your connection is restored and you are signed in, any changes made while offline sync to the cloud automatically.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="lock" href="/account/authentication">
+    Create an account or sign in to enable cloud sync.
+  </Card>
+  <Card title="Favorites & Quick Access" icon="heart" href="/account/favorites">
+    Manage the stops, connections, and routes that sync to your account.
+  </Card>
+  <Card title="Account Overview" icon="user" href="/account/overview">
+    Everything your account provides at a glance.
+  </Card>
+</CardGroup>

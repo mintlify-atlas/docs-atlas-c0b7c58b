@@ -1,0 +1,129 @@
+---
+title: "Service Alerts"
+description: "Live disruption reports, warnings, and informational messages from the South Tyrol transit network."
+keywords: ["service alerts", "disruptions", "delays", "transit warnings", "South Tyrol", "EFA"]
+---
+
+Service Alerts gives you up-to-date information about disruptions, engineering works, and other events affecting the South Tyrol transit network. Alerts come directly from the official EFA API operated by the South Tyrol transit authority (STA), so you get the same information shown at stops and stations.
+
+## Accessing service alerts
+
+You can reach service alerts from two places:
+
+- **Home screen widget** — A compact alerts banner appears on the home screen when active alerts exist. It shows the number of critical, warning, and informational alerts at a glance. Tap it to open the full alerts page.
+- **Full alerts page** — Navigate directly to `/stoerungen` or tap the **alerts icon** in the navigation bar to open the complete list with filtering options.
+
+## Alert severity levels
+
+SmartMove maps every alert from the EFA network to one of three severity levels:
+
+<Tabs>
+  <Tab title="Critical">
+    **Critical alerts** indicate service-blocking disruptions — for example, a line that is completely suspended, a stop that is closed, or an emergency affecting passenger travel. These appear with a red badge and an X-circle icon.
+
+    A critical alert is shown when the EFA API reports the alert as high priority or marks it as a `stopBlocking` event.
+  </Tab>
+  <Tab title="Warning">
+    **Warnings** cover partial disruptions, significant delays, or planned engineering works that affect normal service but do not fully block it. These appear with an amber badge and a triangle-warning icon.
+
+    A warning is shown when the EFA API reports the alert as normal priority or marks it as a `lineInfo` event.
+  </Tab>
+  <Tab title="Info">
+    **Info messages** are general announcements — service changes, temporary timetable adjustments, or events that affect the network but do not cause disruption. These appear with a blue badge and an info icon.
+  </Tab>
+</Tabs>
+
+## Reading an alert
+
+Each alert card in the full alerts page shows:
+
+- **Severity badge** — Colour-coded label (critical / warning / info)
+- **Title** — A short description of the event
+- **Subtitle** — The line, stop, or route affected
+- **Time** — When the disruption started or when it was published
+- **Full description** — Tap the card to expand it and read the complete message from the transit authority
+
+<Note>
+  Alert content is published by the South Tyrol transit authority in German and Italian. SmartMove displays the text as-is from the official feed; the language matches the content of the alert itself.
+</Note>
+
+## Filtering alerts
+
+The full alerts page provides two filter controls to narrow the list:
+
+### Filter by severity
+
+Tap the **severity filter** to show only alerts of a specific type:
+
+| Filter | Shows |
+|--------|-------|
+| **All** | Every active alert regardless of severity |
+| **Critical** | Only service-blocking disruptions |
+| **Warning** | Only partial disruptions and engineering works |
+| **Info** | Only informational announcements |
+
+### Filter by transport mode
+
+Tap the **mode filter** to limit alerts to a specific transport type:
+
+| Filter | Shows |
+|--------|-------|
+| **All** | Alerts for every mode |
+| **Train** | Alerts mentioning train or rail services |
+| **Bus** | Alerts for bus routes |
+| **Cable car** | Alerts for gondola and aerial tramway services |
+
+SmartMove detects the transport mode of an alert by scanning the alert text for known German and Italian keywords (for example, "Zug", "treno", "Seilbahn", "funivia").
+
+## Home screen alert banner
+
+When there are active alerts, a banner appears on the home screen above the search form. The banner colour reflects the most severe active alert:
+
+- **Red border** — at least one critical alert is active
+- **Amber border** — warnings are active but no critical alerts
+- **Blue border** — only informational messages are active
+
+Tap the banner to go directly to the full alerts page.
+
+<Tip>
+  If the banner is not visible, there are no active alerts for the network. This is the normal state on most days.
+</Tip>
+
+## Data source and refresh rate
+
+All alerts come from the official South Tyrol EFA API (`efa.sta.bz.it`). SmartMove fetches the alert feed when you open the home screen or alerts page, and refreshes it automatically every 5 minutes while the page is open.
+
+<Warning>
+  Alert data reflects what the transit authority has published. SmartMove has no ability to add, modify, or remove alerts — all content comes directly from the official feed.
+</Warning>
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Why does an alert appear for a line I don't use?">
+    The alerts page shows all active alerts for the entire South Tyrol network. Use the mode and severity filters to focus on the lines and types of disruption that matter to you.
+  </Accordion>
+  <Accordion title="Are alerts available in my language?">
+    Alert text is published by the transit authority in German and Italian. SmartMove displays the content directly from the feed. There is no translated version for English or Ladin.
+  </Accordion>
+  <Accordion title="How current is the alert data?">
+    The feed refreshes every 5 minutes while the page is open. When you first open the home screen or alerts page, a fresh request is made immediately. Tap the **refresh** button on the alerts page to force an immediate update.
+  </Accordion>
+  <Accordion title="Why is the alert banner not showing even though I heard there is a disruption?">
+    Alerts must be published to the EFA API by the transit authority before they appear in SmartMove. There may be a short delay between a disruption occurring and the official alert being posted.
+  </Accordion>
+</AccordionGroup>
+
+## Related features
+
+<CardGroup cols={2}>
+  <Card title="Route Search" icon="search" href="/features/route-search">
+    Check for alternative connections if a disruption affects your planned route.
+  </Card>
+  <Card title="Departure Board" icon="clock" href="/features/departure-board">
+    See live delay data for individual services at your stop.
+  </Card>
+  <Card title="Commuter Mode" icon="zap" href="/features/commuter-mode">
+    Check alerts before your regular commute to anticipate delays.
+  </Card>
+</CardGroup>

@@ -1,0 +1,97 @@
+---
+title: "Development setup"
+description: "How to run SmartMove locally: prerequisites, installation, environment variables, and the dev server."
+---
+
+## Prerequisites
+
+- **Node.js 18 or later** — [nodejs.org](https://nodejs.org)
+- **npm** — ships with Node.js
+
+## Installation
+
+<Steps>
+  <Step title="Clone the repository">
+    ```bash
+    git clone https://github.com/c1mplete/SmartMoveNewUI.git
+    cd SmartMoveNewUI
+    ```
+  </Step>
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+  <Step title="Create the environment file">
+    Create a `.env.local` file in the project root:
+
+    ```env
+    VITE_SUPABASE_URL=your_supabase_project_url
+    VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+    ```
+
+    You can find both values in your Supabase project under **Settings → API**.
+
+    <Note>
+      Cloud sync and authentication require these variables. The app works fully without them — all data is stored in localStorage and the EFA API is called directly.
+    </Note>
+  </Step>
+  <Step title="Start the dev server">
+    ```bash
+    npm run dev
+    ```
+
+    Vite starts a local dev server and listens on all network interfaces (`0.0.0.0`). The terminal output shows the local URL, typically `http://localhost:5173`.
+  </Step>
+</Steps>
+
+## Build
+
+To produce a production build:
+
+```bash
+npm run build
+```
+
+The output goes to `dist/`. You can preview the built output locally using:
+
+```bash
+npx vite preview
+```
+
+## Environment variables
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | No | Your Supabase project URL |
+| `VITE_SUPABASE_ANON_KEY` | No | Your Supabase anon (public) key |
+
+All Vite environment variables must be prefixed with `VITE_` to be accessible in client code. Variables without this prefix are not exposed to the browser.
+
+<Warning>
+  Never add your `service_role` key to `.env.local` or any client-side environment file. The anon key is safe to expose — it is restricted by Row Level Security.
+</Warning>
+
+## Vite configuration
+
+The Vite config (`vite.config.ts`) sets up:
+
+- **React plugin** — `@vitejs/plugin-react` for JSX and Fast Refresh
+- **Tailwind plugin** — `@tailwindcss/vite` for CSS processing
+- **Path alias** — `@` maps to `./src` for cleaner imports
+- **Asset types** — `.svg` and `.csv` files are handled as static assets
+- **Network host** — `server.host: true` exposes the dev server on all interfaces for local network testing
+
+## Recommended editor setup
+
+- [VS Code](https://code.visualstudio.com) with the **ESLint** and **Tailwind CSS IntelliSense** extensions
+- TypeScript support is built-in via Vite's React plugin
+
+<CardGroup cols={2}>
+  <Card title="Project structure" icon="folder-tree" href="/technical/project-structure">
+    Where to find components, services, and styles.
+  </Card>
+  <Card title="Deployment" icon="cloud" href="/technical/deployment">
+    Deploy SmartMove to Vercel.
+  </Card>
+</CardGroup>

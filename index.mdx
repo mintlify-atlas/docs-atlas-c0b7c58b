@@ -1,97 +1,58 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "SmartMove — Real-Time Transit for South Tyrol"
+description: "Search connections, view live departures, follow routes on an interactive map, and get service alerts — all in one app."
 ---
 
-## Setting up
+SmartMove is your real-time public transit companion for South Tyrol (Südtirol / Alto Adige). Whether you're commuting daily or exploring the region, SmartMove gives you instant access to connections across trains, buses, cable cars, and the Bolzano tram — with live departure data, GPS route following, and service alerts.
 
-Get your documentation site up and running in minutes.
-
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
-
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={2}>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Get SmartMove running in minutes with step-by-step setup instructions.
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="Route Search" icon="magnifying-glass" href="/features/route-search">
+    Find optimal connections across all transit modes with powerful filters.
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Live Map" icon="map" href="/features/live-map">
+    Explore all stops across South Tyrol with real-time departures and GPS tracking.
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Departure Board" icon="clock" href="/features/departure-board">
+    Real-time departures for any stop with delay indicators and platform info.
   </Card>
-</Columns>
+</CardGroup>
 
-## Create beautiful pages
+## What SmartMove does
 
-Everything you need to create world-class documentation.
+SmartMove connects to the official South Tyrol transit authority API (`efa.sta.bz.it`) to deliver real-time data across the entire regional network. It works fully offline using local storage — cloud sync is optional via a free account.
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
+<CardGroup cols={2}>
+  <Card title="Commuter Mode" icon="train" href="/features/commuter-mode">
+    Save frequent routes and get one-tap access to the next available connection.
   </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
+  <Card title="Service Alerts" icon="triangle-exclamation" href="/features/service-alerts">
+    Live disruption reports, warnings, and info from the transit network.
   </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
+  <Card title="Favorites & Sharing" icon="star" href="/account/favorites">
+    Bookmark stops and routes, then share them with a short link.
   </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
+  <Card title="Multi-Language" icon="globe" href="/customization/language">
+    Full support for German, Italian, English, and Ladin (Gherdëina).
   </Card>
-</Columns>
+</CardGroup>
 
-## Need inspiration?
+## Get started in three steps
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<Steps>
+  <Step title="Open the app">
+    Navigate to the SmartMove web app. No installation required — it runs in any modern browser.
+  </Step>
+  <Step title="Search your first connection">
+    Type your departure and destination stops on the home screen. SmartMove autocompletes stop names in both German and Italian.
+  </Step>
+  <Step title="Follow your route (optional)">
+    Tap any result to see the full route detail, then enable route following for real-time walking progress and next-stop notifications.
+  </Step>
+</Steps>
+
+<Note>
+  SmartMove works fully without an account. Create a free account to sync your favorites, saved routes, and settings across all your devices.
+</Note>

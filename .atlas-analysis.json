@@ -1,23 +1,11 @@
 {
-  "$schema": "https://mintlify.com/docs.json",
-  "name": "SmartMove",
+  "projectType": "saas",
+  "projectName": "SmartMove",
+  "projectDescription": "A real-time public transit companion app for South Tyrol that lets users search connections, view live departures, follow routes on an interactive map, and receive service alerts.",
   "theme": "almond",
-  "colors": {
-    "primary": "#047cfc",
-    "light": "#7cbcfc"
-  },
-  "favicon": "https://media.brand.dev/c3f30860-71ad-4a48-81fb-bd4f812ca325.svg",
-  "navbar": {
-    "primary": {
-      "type": "github",
-      "href": "https://github.com/c1mplete/SmartMoveNewUI"
-    }
-  },
-  "footer": {
-    "socials": {
-      "github": "https://github.com/c1mplete/SmartMoveNewUI"
-    }
-  },
+  "primaryColor": "#047cfc",
+  "lightColor": "#7cbcfc",
+  "darkColor": null,
   "navigation": {
     "tabs": [
       {
@@ -89,5 +77,29 @@
         ]
       }
     ]
-  }
+  },
+  "keyFeatures": [
+    "Real-time connection search across trains, buses, cable cars, and trams",
+    "Interactive Leaflet map with GPS tracking and live departures",
+    "Departure board with delay indicators and platform info",
+    "Commuter mode for one-tap access to saved frequent routes",
+    "Live service alerts and disruption reports from the transit network",
+    "Route sharing via short links",
+    "Multi-language support: German, Italian, English, and Ladin",
+    "Light/dark/system-auto theme switching",
+    "Cloud sync via Supabase with offline localStorage fallback"
+  ],
+  "publicApiSurface": [
+    "searchStopsEfa(query: string): Promise<EfaStop[]>",
+    "getRecentStops(): RecentStop[]",
+    "getRecentConnections(): RecentConnection[]",
+    "getLikedRoutes(): LikedRoute[]",
+    "getCommuterRoutes(): CommuterRoute[]",
+    "getActiveRoutes(): ActiveRoute[]",
+    "getDepartureStations(): DepartureStation[]",
+    "getQuickAccessItems(): QuickAccessItem[]",
+    "syncAllToSupabase(): Promise<void>",
+    "syncAllFromSupabase(): Promise<void>",
+    "router (React Router browser router with all app routes)"
+  ]
 }

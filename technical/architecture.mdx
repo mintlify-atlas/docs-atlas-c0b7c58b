@@ -1,0 +1,101 @@
+---
+title: "Architecture"
+description: "How SmartMove is structured: the client-side SPA, persistence model, state management, and transit data integration."
+---
+
+SmartMove is a single-page application (SPA) built with React 18 and deployed on Vercel. All transit data is fetched directly from the South Tyrol EFA API. User data is stored locally first and optionally synced to Supabase when the user is authenticated.
+
+## Stack overview
+
+| Layer | Technology |
+|-------|------------|
+| Framework | React 18 + React Router 7 |
+| Build tool | Vite 6 |
+| Styling | Tailwind CSS 4 + Radix UI primitives |
+| Maps | Leaflet + React-Leaflet |
+| Auth & database | Supabase (PostgreSQL + Auth + RLS) |
+| Animations | Motion (Framer Motion) |
+| Transit data | EFA API (`efa.sta.bz.it`) |
+| Hosting | Vercel |
+
+## Application layers
+
+```
+Browser
+├── React SPA (React 18 + React Router 7)
+│   ├── Components (screens, UI)
+│   ├── i18n (hook-based, JSON translation files)
+│   └── Services
+│       ├── efa.ts         → EFA API (transit data)
+│       ├── storage.ts     → localStorage + cloud sync
+│       ├── supabase.ts    → Supabase client
+│       └── notificationService.ts
+│
+├── localStorage           ← immediate source of truth
+│
+└── Supabase (PostgreSQL + Auth + RLS)
+    └── cloud sync when authenticated
+```
+
+## Persistence model
+
+localStorage is the primary data store. Every read and write goes through `storage.ts`, which provides typed accessors for all persisted keys.
+
+When a user is authenticated, every write to localStorage also triggers an async upsert to Supabase via `syncKeyToCloud()`. On login, `syncAllFromSupabase()` pulls the latest cloud state into localStorage.
+
+This means:
+- The app works fully offline without an account
+- Cloud sync is additive — it never blocks the UI
+- localStorage is always the fast path for reads
+
+## Event-driven state
+
+Components do not share React context or a global store for persisted data. Instead, `storage.ts` dispatches custom window events on every write:
+
+```typescript
+window.dispatchEvent(new Event('recent-stops-changed'));
+window.dispatchEvent(new Event('liked-routes-changed'));
+window.dispatchEvent(new Event('theme-changed'));
+```
+
+Components add listeners with `window.addEventListener` and re-read from `storage.ts` when an event fires. This keeps components decoupled while still reacting to changes made by other parts of the app.
+
+## Routing
+
+React Router 7 handles all client-side navigation via `createBrowserRouter`. The `Layout` component wraps all authenticated screens and renders the shared navigation shell.
+
+| Path | Component | Purpose |
+|------|-----------|---------|
+| `/` | `HomeScreen` | Route search |
+| `/results` | `ResultsScreen` | Connection results |
+| `/detail/:id` | `RouteDetailScreen` | Full trip detail |
+| `/r/:id` | `RouteDetailScreen` | Shared route link |
+| `/map` | `LiveMapScreen` | Interactive transit map |
+| `/account` | `AccountScreen` | User profile and settings |
+| `/stoerungen` | `ServiceAlertsPage` | Service disruptions |
+| `/login` | `LoginScreen` | Authentication |
+| `/signup` | `SignUpScreen` | Registration |
+
+## Transit data
+
+All transit data comes from the South Tyrol EFA API at `https://efa.sta.bz.it/apb`. The `efa.ts` service layer handles stop autocomplete, connection search, departure boards, and service alerts. It normalizes API inconsistencies and maps transport modes to a consistent set:
+
+- `RAIL` — trains (SAD, Trenitalia)
+- `BUS` — buses (SASA, SAD coaches)
+- `GONDOLA` — cable cars and aerial tramways
+- `WALK` — walking segments
+
+The EFA service also handles bilingual query translation automatically. When a user types a German place name, the service also searches the Italian variant (and vice versa) in parallel to maximize stop coverage.
+
+## i18n
+
+The app ships with four locales: German (`de`), Italian (`it`), English (`en`), and Ladin (`lad`). A custom hook reads the active language from localStorage and provides typed `t()` translation lookups. EFA API queries adapt to the selected language — German and Italian are queried directly; Ladin and English fall back to German for transit data.
+
+<CardGroup cols={2}>
+  <Card title="Data persistence" icon="database" href="/technical/data-persistence">
+    localStorage keys, window events, and Supabase sync in detail.
+  </Card>
+  <Card title="Transit API" icon="bus" href="/technical/transit-api">
+    EFA integration, stop search, and transport mode mapping.
+  </Card>
+</CardGroup>

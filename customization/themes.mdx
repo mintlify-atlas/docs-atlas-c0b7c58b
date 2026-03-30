@@ -1,0 +1,51 @@
+---
+title: "Appearance"
+description: "Choose between light, dark, and system themes. The change is instant and your preference is saved automatically."
+keywords: ["theme", "dark mode", "light mode", "appearance", "SmartMove"]
+---
+
+SmartMove supports three appearance modes. You can switch at any time from the account screen and the change takes effect immediately across the entire app.
+
+## Theme options
+
+| Mode | Description |
+|------|-------------|
+| **Light** | Always uses the light colour scheme |
+| **Dark** | Always uses the dark colour scheme |
+| **System** | Follows your operating system's current setting |
+
+<Tip>
+  Use **System** if you have your OS configured to switch between light and dark automatically at sunrise and sunset — SmartMove will follow that schedule without any extra steps.
+</Tip>
+
+## How to change your theme
+
+<Steps>
+  <Step title="Open the Account tab">
+    Tap the **Account** tab (the person icon in the bottom navigation).
+  </Step>
+  <Step title="Select a theme">
+    At the top of the account screen you will see three icons representing **Light**, **Dark**, and **System**. Tap the one you want.
+  </Step>
+</Steps>
+
+The theme switches instantly. You do not need to reload the page or restart the app.
+
+## How theme is stored
+
+Your theme choice is saved to your device under the key `smartmove-theme`. It is applied before the app finishes loading, so you will never see a flash of the wrong theme on startup.
+
+When the theme changes, the app fires a `theme-changed` event on the `window` object. If you are building an integration or a browser extension on top of SmartMove, you can listen for this event to respond to theme changes in real time.
+
+If you are signed in to a SmartMove account, your theme preference syncs to the cloud and is restored on every device you sign in to.
+
+## Related pages
+
+<CardGroup cols={2}>
+  <Card title="Language" icon="globe" href="/customization/language">
+    Switch between German, Italian, English, and Ladin.
+  </Card>
+  <Card title="Notifications" icon="bell" href="/customization/notifications">
+    Configure push alerts for route following and service disruptions.
+  </Card>
+</CardGroup>

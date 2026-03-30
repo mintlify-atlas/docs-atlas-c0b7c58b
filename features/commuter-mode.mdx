@@ -1,0 +1,101 @@
+---
+title: "Commuter Mode"
+description: "Save your frequent routes for one-tap access to the next available connection, sorted by departure time."
+keywords: ["commuter mode", "saved routes", "frequent routes", "quick access", "offline", "South Tyrol transit"]
+---
+
+Commuter Mode is built for trips you make every day. Save any connection as a commuter route and SmartMove shows you the next available departure for that route each time you open the app — no searching required.
+
+## How it works
+
+Each saved commuter route stores your origin, destination, and the connection details. When you open the home screen, SmartMove sorts your commuter routes by the departure closest to the current time, so the route you need next appears at the top.
+
+## Adding a commuter route
+
+<Steps>
+  <Step title="Search for your connection">
+    Use [Route Search](/features/route-search) to find the connection you travel regularly. Enter your usual departure stop and destination.
+  </Step>
+  <Step title="Open the route detail">
+    Tap the connection result you want to save to open the full trip breakdown.
+  </Step>
+  <Step title="Save to Commuter Mode">
+    Tap the **lightning bolt** (Zap) icon or the **Save to Commuter** button in the detail view. SmartMove saves the full route — origin, destination, and the complete trip data — to your commuter routes list.
+  </Step>
+  <Step title="Access from the home screen">
+    Your commuter routes now appear in the **Commuter Mode** section of the home screen, sorted by the next upcoming departure.
+  </Step>
+</Steps>
+
+## Viewing your commuter routes
+
+The Commuter Mode section on the home screen shows a card for each saved route. Each card displays:
+
+- **Route label** — A custom name you can set, or the auto-generated "From → To" label
+- **Departure and arrival times** — The next departure for this connection
+- **Duration** — Total travel time
+- **Leg strip** — Colour-coded bar showing each transport mode in the journey
+- **Connection status** — Whether the next connection is upcoming or has already departed
+
+Routes are automatically sorted so the connection departing soonest is at the top of the list. Past departures fall to the bottom.
+
+## Tapping a commuter route
+
+Tap any commuter route card to jump straight to the full connection detail view for that route. From there you can:
+
+- See the full stop-by-stop breakdown
+- Check live delay information
+- Start route following on the map
+
+<Tip>
+  If the saved connection time has passed, tap the card to open route search with the same origin and destination pre-filled so you can find the next available departure.
+</Tip>
+
+## Renaming a route
+
+<Steps>
+  <Step title="Open the edit menu">
+    Tap the **pencil** icon on any commuter route card.
+  </Step>
+  <Step title="Enter a new label">
+    Type a descriptive name, such as "Morning commute" or "Bolzano → Merano".
+  </Step>
+  <Step title="Save">
+    Tap the **check** icon to confirm. The new label appears on the card immediately.
+  </Step>
+</Steps>
+
+## Removing a commuter route
+
+Tap the **trash** icon on a commuter route card to remove it from your list. The route is deleted immediately. This action cannot be undone, but you can re-add the route at any time by searching again and saving it.
+
+## Frequently asked questions
+
+<AccordionGroup>
+  <Accordion title="Does Commuter Mode work offline?">
+    Yes. Commuter routes are stored locally on your device using your browser's `localStorage`. The saved route information — origin, destination, times, and leg data — is available without a network connection. However, fetching live delay data for upcoming departures does require an internet connection.
+  </Accordion>
+  <Accordion title="Will my commuter routes sync across devices?">
+    If you are signed in to a SmartMove account, commuter routes sync automatically to the cloud via Supabase. When you sign in on another device, your routes appear there as well. Without an account, routes are stored only on the device where you saved them.
+  </Accordion>
+  <Accordion title="How many routes can I save?">
+    There is no hard limit on the number of commuter routes you can save. For the best experience, keep your list to the routes you travel most regularly — typically five to ten routes.
+  </Accordion>
+  <Accordion title="Can I reorder my commuter routes?">
+    SmartMove automatically sorts routes by the next upcoming departure time, so the route you need soonest is always first. Manual reordering is not currently available.
+  </Accordion>
+</AccordionGroup>
+
+## Related features
+
+<CardGroup cols={2}>
+  <Card title="Route Search" icon="search" href="/features/route-search">
+    Find a connection and save it to Commuter Mode from the detail view.
+  </Card>
+  <Card title="Departure Board" icon="clock" href="/features/departure-board">
+    Check live departures for the stops on your commuter routes.
+  </Card>
+  <Card title="Service Alerts" icon="triangle-alert" href="/features/service-alerts">
+    Check for disruptions that might affect your commute before you leave.
+  </Card>
+</CardGroup>

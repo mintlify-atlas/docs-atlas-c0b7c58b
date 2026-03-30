@@ -1,0 +1,127 @@
+---
+title: "Route Search"
+description: "Find the best connection between any two stops in the South Tyrol transit network, with real-time results and flexible filters."
+keywords: ["route search", "connections", "transit", "South Tyrol", "EFA", "trip planning"]
+---
+
+Route search lets you find connections across all transit modes in South Tyrol — trains, buses, cable cars, and the Bolzano tram — in a single search. Results update from the live EFA network, so departure times and delays reflect the current state of the network.
+
+## Searching for a connection
+
+<Steps>
+  <Step title="Open the home screen">
+    Launch SmartMove. The route search form is at the top of the home screen.
+  </Step>
+  <Step title="Enter your departure stop">
+    Tap the **From** field and start typing the name of your starting stop. Autocomplete suggests matching stops as you type, searching both German and Italian stop names simultaneously — for example, typing "Bozen" also surfaces results for "Bolzano".
+  </Step>
+  <Step title="Enter your destination">
+    Tap the **To** field and type your destination. The same bilingual autocomplete applies.
+
+    <Tip>
+      Tap the swap icon (the two arrows) between the fields to instantly reverse departure and destination.
+    </Tip>
+  </Step>
+  <Step title="Choose a departure time">
+    By default, SmartMove searches for connections departing **now**. To plan a future trip, switch from **Now** to **Custom** and pick a date and time using the calendar and time inputs.
+  </Step>
+  <Step title="Apply filters (optional)">
+    Tap the **settings sliders** icon to open the preferences panel. Adjust your filters before searching.
+  </Step>
+  <Step title="Tap Search">
+    SmartMove queries the EFA API and displays available connections sorted by your preference.
+  </Step>
+</Steps>
+
+## Transport mode filters
+
+You can toggle individual transport modes on or off before searching. Only modes you have enabled will appear in results.
+
+| Mode | What it covers |
+|------|---------------|
+| **Train** (Zug) | SAD regional trains and Trenitalia services |
+| **Bus** | SASA urban buses (Bolzano, Merano) and SAD regional coaches |
+| **Cable car** (Seilbahn) | Gondola and aerial tramway lines |
+
+Walking legs are always included as needed to connect stops.
+
+## Search preferences
+
+Open the preferences panel (sliders icon) to control how SmartMove ranks and filters your results.
+
+<Tabs>
+  <Tab title="Sort order">
+    | Option | Description |
+    |--------|-------------|
+    | **Fastest** | Minimises total travel time, including transfers |
+    | **Least walking** | Prefers connections with shorter walking segments |
+    | **No transfer** | Shows only direct connections, no changes required |
+  </Tab>
+  <Tab title="Accessibility">
+    Toggle **Stairs** to include or exclude connections that require using stairs. Useful when travelling with luggage or a pram.
+  </Tab>
+  <Tab title="Other options">
+    Enable **Bike** to include legs where you cycle to or from a stop. Enable **Long distance** to widen the search radius beyond local stops.
+  </Tab>
+</Tabs>
+
+## Reading connection results
+
+Each result card shows you the key details for a connection at a glance.
+
+- **Departure and arrival times** — Shown in 24-hour format
+- **Total duration** — How long the full journey takes
+- **Transfer count** — Number of changes required
+- **Leg strip** — A colour-coded bar showing each leg of the journey (train in red, bus in blue/purple, cable car in green, walking in grey)
+- **Delay indicator** — If a vehicle is running late, the delayed time appears in amber or red next to the scheduled time
+
+<Note>
+  Delay data comes directly from the live EFA feed. If a service is running on time, no delay indicator is shown.
+</Note>
+
+Tap the **heart** icon on any result to save it to your liked routes for quick access later.
+
+## Route detail view
+
+Tap any connection result to open the full trip breakdown.
+
+The detail view shows:
+
+- Every **leg** of the journey with departure stop, arrival stop, line number, and direction
+- **Walking legs** with estimated walk time and distance
+- **Intermediate stops** — tap a leg to expand the list of stops in between
+- **Platform information** where available
+- **Delay** on each vehicle leg
+
+### Sharing a route
+
+Tap the **share** icon (top right of the detail view) to generate a short link for the connection. The link uses the format `https://smartmove.dev/r/:id` and encodes the full itinerary so anyone can open it, even without a SmartMove account.
+
+<Tip>
+  Share links work on any device and do not require the recipient to be logged in.
+</Tip>
+
+### Saving and following
+
+From the detail view you can:
+
+- **Like the route** — saves it to your liked routes list (heart icon)
+- **Save to Commuter Mode** — adds the connection to your commuter shortcuts for one-tap access
+- **Start following** — activates real-time route following on the live map
+
+## Related features
+
+<CardGroup cols={2}>
+  <Card title="Live Map" icon="map" href="/features/live-map">
+    Follow your active route on an interactive map with real-time position updates.
+  </Card>
+  <Card title="Commuter Mode" icon="zap" href="/features/commuter-mode">
+    Save frequent connections for one-tap access to the next available departure.
+  </Card>
+  <Card title="Departure Board" icon="clock" href="/features/departure-board">
+    Check live departures for any individual stop.
+  </Card>
+  <Card title="Service Alerts" icon="triangle-alert" href="/features/service-alerts">
+    See disruptions and warnings before you travel.
+  </Card>
+</CardGroup>

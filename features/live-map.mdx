@@ -1,0 +1,100 @@
+---
+title: "Live Map"
+description: "An interactive map of every stop in the South Tyrol transit network, with real-time departures, GPS location, and animated route following."
+keywords: ["live map", "interactive map", "GPS", "stops", "departures", "route following", "South Tyrol"]
+---
+
+The live map shows the entire South Tyrol transit network on an interactive Leaflet map. Every bus stop, train station, and cable car station is pinned on the map. Tap any stop to see live departures, or let the map follow you along an active route.
+
+## Accessing the map
+
+Tap the **map icon** in the bottom navigation bar. The map opens at your last viewed location, or centred on Bolzano if you are opening it for the first time.
+
+The route for the map view is `/map`.
+
+## Navigating the map
+
+Pan and zoom the map by dragging and pinching (on touch screens) or scrolling (on desktop). Stop markers appear as you zoom in — the map loads stops dynamically for the visible area to keep performance fast.
+
+<Tip>
+  Zoom in to a neighbourhood to see all the stops in that area. The map fetches stop data for whatever bounding box is currently visible.
+</Tip>
+
+### Dark and light themes
+
+The map tiles automatically match your SmartMove theme setting. In dark mode the map uses a dark CartoDB basemap; in light mode it switches to the light variant.
+
+## GPS location
+
+<Steps>
+  <Step title="Enable location">
+    Tap the **locate** button (crosshair icon, bottom right of the map). Your browser will ask for permission to access your location the first time.
+  </Step>
+  <Step title="View your position">
+    Once granted, a blue dot marks your current position on the map. The map pans to centre on you automatically.
+  </Step>
+  <Step title="Keep location updated">
+    Your position dot updates continuously as you move, so you always know which stops are closest to you.
+  </Step>
+</Steps>
+
+<Note>
+  Location access is entirely optional. The map works without GPS — you can browse stops and departures by panning manually.
+</Note>
+
+## Viewing stop departures
+
+Tap any stop marker on the map to open the **stop info panel** at the bottom of the screen. The panel shows:
+
+- **Stop name** in the network's official name (German or Italian depending on your language setting)
+- **Upcoming departures** — the next services calling at that stop, with line number, direction, scheduled time, and delay
+- **Transport mode icons** — colour-coded icons indicate whether each departure is a train, bus, or cable car
+
+Scroll down within the panel to see more departures. The list auto-refreshes to stay current.
+
+### Opening the full departure board
+
+From the stop info panel, tap **View full board** to open that stop in the dedicated [Departure Board](/features/departure-board) view with the complete timetable and filter options.
+
+## Route following
+
+When you have an active route (started from the [route detail view](/features/route-search)), the map enters route-following mode.
+
+<Steps>
+  <Step title="Start a route">
+    Find a connection in route search, open the detail view, and tap **Follow route**. The map switches to following mode.
+  </Step>
+  <Step title="Watch the animated path">
+    Your active route is drawn as a coloured polyline on the map. Each leg is colour-coded by transport mode — red for train, blue for bus, green for cable car, grey for walking.
+  </Step>
+  <Step title="See your progress">
+    As you travel, the map scrolls to keep your position in view. The current leg and next stop are highlighted in the info card at the bottom.
+  </Step>
+  <Step title="Stop following">
+    Tap **Stop following** in the info card, or navigate away from the map view, to end route following.
+  </Step>
+</Steps>
+
+<Warning>
+  Route following uses your device's GPS. Keep the app open and your screen on for accurate position updates during your journey.
+</Warning>
+
+## Map controls
+
+| Control | Location | Action |
+|---------|----------|--------|
+| **Zoom in / out** | Bottom right | Tap `+` or `−` to zoom one level |
+| **Locate me** | Bottom right | Centres map on your GPS position |
+| **Layer toggle** | Top right | Switches between map tile styles |
+| **Close stop panel** | Panel top right | Dismisses the stop info card |
+
+## Related features
+
+<CardGroup cols={2}>
+  <Card title="Route Search" icon="search" href="/features/route-search">
+    Plan a connection and start following it on the map.
+  </Card>
+  <Card title="Departure Board" icon="clock" href="/features/departure-board">
+    See the full timetable for any stop.
+  </Card>
+</CardGroup>

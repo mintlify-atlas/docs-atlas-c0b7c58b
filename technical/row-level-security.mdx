@@ -1,0 +1,76 @@
+---
+title: "Row level security"
+description: "How Supabase Row Level Security (RLS) isolates user data in SmartMove and allows route sharing without authentication."
+---
+
+Every table in SmartMove's Supabase database has Row Level Security (RLS) enabled. RLS policies are enforced by the database itself, not by application code, so data isolation cannot be bypassed by client-side changes.
+
+## What RLS does
+
+Without RLS, any authenticated request using the anon key could read or write any row in any table. With RLS, Supabase evaluates a policy for every query and restricts results to only the rows that satisfy the policy expression.
+
+SmartMove uses a single policy pattern for all user tables:
+
+```sql
+-- Only allow access to rows belonging to the authenticated user
+CREATE POLICY "Users can access their own data"
+  ON table_name
+  FOR ALL
+  USING (user_id = auth.uid());
+```
+
+`auth.uid()` returns the UUID of the currently authenticated user from the JWT. If no user is authenticated (anon request), `auth.uid()` returns `null`, and the policy evaluates to false — no rows are returned.
+
+## Policy per table
+
+| Table | Policy | Readable without auth |
+|-------|--------|-----------------------|
+| `user_preferences` | `user_id = auth.uid()` | No |
+| `user_stops` | `user_id = auth.uid()` | No |
+| `user_connections` | `user_id = auth.uid()` | No |
+| `quick_access` | `user_id = auth.uid()` | No |
+| `commuter_routes` | `user_id = auth.uid()` | No |
+| `liked_routes` | `user_id = auth.uid()` | No |
+| `active_routes` | `user_id = auth.uid()` | No |
+| `departure_stations` | `user_id = auth.uid()` | No |
+| `route_shares` | No `user_id` restriction | Yes |
+
+## Route shares exception
+
+The `route_shares` table allows public reads so that shared route links work without requiring the recipient to have an account. The table has no `user_id` column and a permissive read policy:
+
+```sql
+-- Anyone can read route shares (enables public short links)
+CREATE POLICY "Route shares are publicly readable"
+  ON route_shares
+  FOR SELECT
+  USING (true);
+```
+
+Writes to `route_shares` should be restricted to authenticated users only.
+
+## Effect on the SmartMove client
+
+The Supabase JS client in `src/app/services/supabase.ts` uses the anon key. When a user logs in via Supabase Auth, the client automatically attaches the user's JWT to all subsequent requests. RLS then transparently filters all queries to that user's rows.
+
+This means:
+- You do not need to add `WHERE user_id = ...` to any query in application code — RLS handles it
+- A user who logs out immediately loses access to their cloud data in the client (the JWT is cleared)
+- Users can never read or write another user's data, even if they have the anon key
+
+<Warning>
+  If you disable RLS on any table, all rows in that table become readable and writable by any client holding the anon key. Do not disable RLS in production.
+</Warning>
+
+## Testing policies
+
+To verify RLS is working correctly, you can use the Supabase dashboard's **SQL editor** with the `SET LOCAL role = authenticated; SET LOCAL request.jwt.claim.sub = '<user_id>';` prefix to simulate queries as a specific user, or use the **Auth** section to test with different user sessions.
+
+<CardGroup cols={2}>
+  <Card title="Database schema" icon="table" href="/technical/database-schema">
+    Full table and column definitions.
+  </Card>
+  <Card title="Data persistence" icon="database" href="/technical/data-persistence">
+    How the client reads and writes through the storage service.
+  </Card>
+</CardGroup>

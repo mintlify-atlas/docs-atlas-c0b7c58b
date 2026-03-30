@@ -1,0 +1,100 @@
+---
+title: "Configuration"
+description: "Configure environment variables for optional cloud sync and authentication."
+---
+
+SmartMove uses two optional environment variables to enable Supabase-backed cloud sync and authentication. Without them, the app runs fully using `localStorage` — no configuration is required for local or offline use.
+
+<Note>
+  If you are using the hosted SmartMove app, this page is for self-hosted deployments only. Skip to the [storage keys reference](#storage-keys-reference) if you want to understand what data SmartMove stores locally.
+</Note>
+
+## Environment variables
+
+Create a `.env.local` file in the project root to enable cloud sync:
+
+```env .env.local
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+If these variables are missing, the app logs a warning and continues in local-only mode:
+
+```
+Supabase URL or Anon Key is missing. Check your .env file. Cloud sync is disabled.
+```
+
+### Variable reference
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_SUPABASE_URL` | No | The URL of your Supabase project (e.g., `https://xxxx.supabase.co`). |
+| `VITE_SUPABASE_ANON_KEY` | No | The public anonymous key for your Supabase project. Safe to expose in the browser — Row Level Security (RLS) controls data access. |
+
+<Warning>
+  Never use the Supabase **service role key** as the anon key. The service role key bypasses RLS and would expose all user data. Always use the **anon/public** key.
+</Warning>
+
+### When you need these variables
+
+You only need `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` if you want to enable:
+
+- **User authentication** — Sign-up and login via the `/account` screen
+- **Cloud sync** — Bidirectional sync of favorites, routes, and settings across devices
+
+Without them, SmartMove stores everything in `localStorage` and cloud features are disabled.
+
+## Getting your Supabase credentials
+
+<Steps>
+  <Step title="Create a Supabase project">
+    Go to [supabase.com](https://supabase.com) and create a new project. Choose a region close to your users.
+  </Step>
+  <Step title="Find your project URL and anon key">
+    In the Supabase dashboard, go to **Project Settings → API**. Copy the **Project URL** and the **anon / public** key.
+  </Step>
+  <Step title="Add them to .env.local">
+    Paste the values into your `.env.local` file:
+
+    ```env .env.local
+    VITE_SUPABASE_URL=https://xxxxxxxxxxxx.supabase.co
+    VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    ```
+  </Step>
+  <Step title="Restart the dev server">
+    Vite reads `.env.local` at startup. Restart the server after adding or changing these values:
+
+    ```bash
+    npm run dev
+    ```
+  </Step>
+</Steps>
+
+<Tip>
+  Add `.env.local` to your `.gitignore` to avoid accidentally committing credentials. Vite excludes it from version control by default when you use the standard Vite project setup.
+</Tip>
+
+## Storage keys reference
+
+SmartMove uses `localStorage` as its primary persistence layer. All keys are prefixed with `smartmove-` to avoid collisions with other apps.
+
+When a user is signed in, data syncs bidirectionally between `localStorage` and the Supabase database. `localStorage` is always the immediate source of truth.
+
+| Key | `localStorage` key | Description |
+|-----|--------------------|-------------|
+| `RECENT_STOPS` | `smartmove-recent-stops` | Stops the user has searched or viewed recently, with optional favorite flags. |
+| `RECENT_CONNECTIONS` | `smartmove-recent-connections` | Recent from/to connection pairs with timestamps and optional favorite flags. |
+| `QUICK_ACCESS` | `smartmove-quick-access` | Items pinned to the quick access section on the home screen (stops, lines, or routes). |
+| `ACTIVE_ROUTES` | `smartmove-active-routes` | Currently followed routes, including progress, next stop, and delay status. |
+| `DEPARTURE_STATIONS` | `smartmove-departure-stations` | Stops saved to the departure board for quick access. |
+| `COMMUTER_ROUTES` | `smartmove-commuter-routes` | Saved commuter mode routes for one-tap access to the next available connection. |
+| `LIKED_ROUTES` | `smartmove-liked-routes` | Bookmarked routes with transport mode, duration, and full trip data. |
+| `THEME_MODE` | `smartmove-theme` | The user's preferred theme: `light`, `dark`, or system auto. |
+| `LANGUAGE` | `smartmove-language` | The user's preferred language: `de`, `it`, `en`, or `lad`. |
+| `NOTIFICATIONS` | `smartmove-notifications` | Whether push notifications are enabled. |
+| `PRIVACY_LOCATION` | `smartmove-privacy-location` | Whether the user has granted location access for GPS features. |
+| `PRIVACY_ANALYTICS` | `smartmove-privacy-analytics` | Whether the user has consented to analytics. |
+
+<Note>
+  Clearing your browser's `localStorage` for the SmartMove origin removes all locally stored data. If cloud sync is enabled, data remains in your Supabase account and will re-sync on next login.
+</Note>

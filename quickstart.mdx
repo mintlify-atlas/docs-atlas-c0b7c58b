@@ -1,80 +1,81 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: "Quick start"
+description: "Search your first transit connection in South Tyrol and follow a route — no account required."
 ---
 
-## Get started in three steps
-
-Get your documentation site running locally and make your first customization.
-
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
-
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
-
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
-
-<CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
-</CardGroup>
+SmartMove works immediately in any modern browser. You do not need to install anything or create an account to get started.
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  All your data — recent stops, saved routes, and preferences — is stored locally in your browser. Cloud sync is optional and requires a free account.
 </Note>
+
+## Search a connection
+
+<Steps>
+  <Step title="Open the app">
+    Navigate to the SmartMove home screen (`/`). You will see two input fields: **From** and **To**.
+  </Step>
+  <Step title="Enter your departure stop">
+    Type the name of your departure stop in the **From** field. SmartMove autocompletes stop names in both German and Italian, covering trains, buses, cable cars, and the Bolzano tram.
+  </Step>
+  <Step title="Enter your destination">
+    Type your destination in the **To** field. The same autocomplete works here. You can also set a departure time using the time picker on the home screen.
+  </Step>
+  <Step title="View your results">
+    Tap **Search** to go to the results screen (`/results`). SmartMove lists available connections sorted by departure time, showing the transport mode, duration, number of transfers, and any delays.
+
+    <Tip>
+      Use the filter options on the results screen to narrow results by preference — for example, fastest route, fewest transfers, or least walking.
+    </Tip>
+  </Step>
+  <Step title="Open a connection detail">
+    Tap any result to open the full trip detail (`/detail/:id`). Here you see each leg of the journey — including walking segments — with departure times, platforms, and live delay information.
+  </Step>
+</Steps>
+
+## Follow a route in real time
+
+Once you have a connection detail open, you can follow the journey live.
+
+<Steps>
+  <Step title="Start route following">
+    Tap **Follow route** on the detail screen. SmartMove saves the journey as an active route and begins tracking your progress.
+  </Step>
+  <Step title="Watch your progress">
+    The app shows your current leg, next stop, and remaining time. Walking segments include step-by-step progress.
+  </Step>
+  <Step title="Open the live map">
+    Navigate to the map screen (`/map`) to see your position alongside all nearby stops and your active route overlaid on the map.
+  </Step>
+</Steps>
+
+## Explore the app
+
+| Screen | URL | What you can do |
+|--------|-----|-----------------|
+| Home | `/` | Search connections, access recent stops |
+| Results | `/results` | Browse and filter connection results |
+| Route detail | `/detail/:id` | View full trip, start route following |
+| Live map | `/map` | Explore all stops, see real-time departures |
+| Service alerts | `/stoerungen` | View live disruptions, warnings, and info |
+| Account | `/account` | Sign up, log in, manage settings |
+
+## Optional: create an account for cloud sync
+
+SmartMove works completely without an account. If you want your favorites, commuter routes, and settings to sync across devices, create a free account.
+
+<Steps>
+  <Step title="Go to the account screen">
+    Navigate to `/account` and tap **Sign up**.
+  </Step>
+  <Step title="Enter your email and password">
+    SmartMove uses Supabase authentication. Your credentials are stored securely and never shared.
+  </Step>
+  <Step title="Sync your data">
+    Once signed in, SmartMove syncs your existing local data to the cloud automatically. Any device you sign in to will have access to your saved stops, routes, and preferences.
+  </Step>
+</Steps>
+
+<Warning>
+  Cloud sync requires the app to be deployed with Supabase environment variables configured. If you are self-hosting, see the [configuration guide](/configuration) to set these up.
+</Warning>

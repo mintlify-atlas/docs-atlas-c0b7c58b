@@ -1,0 +1,177 @@
+---
+title: "Data persistence"
+description: "How SmartMove stores user data: localStorage keys, window events for reactive updates, and bidirectional Supabase sync."
+---
+
+SmartMove uses `localStorage` as the primary data store. All reads and writes go through `src/app/services/storage.ts`, which provides typed accessors, dispatches change events, and handles cloud sync for authenticated users.
+
+## localStorage keys
+
+Every key is prefixed with `smartmove-` to avoid collisions.
+
+| Constant | Key | Stores |
+|----------|-----|--------|
+| `RECENT_STOPS` | `smartmove-recent-stops` | Recently viewed stops |
+| `RECENT_CONNECTIONS` | `smartmove-recent-connections` | Recent origin–destination pairs |
+| `QUICK_ACCESS` | `smartmove-quick-access` | Pinned quick access items |
+| `ACTIVE_ROUTES` | `smartmove-active-routes` | Currently followed routes |
+| `DEPARTURE_STATIONS` | `smartmove-departure-stations` | Saved departure board stations |
+| `COMMUTER_ROUTES` | `smartmove-commuter-routes` | Saved commuter mode routes |
+| `LIKED_ROUTES` | `smartmove-liked-routes` | Bookmarked routes |
+| `THEME_MODE` | `smartmove-theme` | Selected theme (`light`, `dark`, or `system`) |
+| `LANGUAGE` | `smartmove-language` | Selected locale code |
+| `NOTIFICATIONS` | `smartmove-notifications` | Notification preference |
+| `PRIVACY_LOCATION` | `smartmove-privacy-location` | Location privacy setting |
+| `PRIVACY_ANALYTICS` | `smartmove-privacy-analytics` | Analytics privacy setting |
+
+## Types
+
+```typescript
+interface RecentStop {
+  name: string;
+  isFavorite: boolean;
+  gtfsId?: string;
+  coords?: { lat: number; lon: number };
+}
+
+interface RecentConnection {
+  from: string;
+  to: string;
+  isFavorite: boolean;
+  fromGtfsId?: string;
+  toGtfsId?: string;
+  fromCoords?: { lat: number; lon: number };
+  toCoords?: { lat: number; lon: number };
+  timestamp?: string;
+}
+
+interface QuickAccessItem {
+  id: string;
+  name: string;
+  type: 'stop' | 'line' | 'route';
+  typeLabel: string;
+}
+
+interface LikedRoute {
+  id: string;
+  from: string;
+  to: string;
+  mode: 'train' | 'bus' | 'seilbahn';
+  duration: string;
+  tripData?: any;
+}
+
+interface ActiveRoute {
+  id: string;
+  from: string;
+  to: string;
+  mode: 'train' | 'bus' | 'seilbahn';
+  departureTime: string;
+  arrivalTime: string;
+  status: 'on-time' | 'delayed' | 'boarding';
+  statusLabel: string;
+  delay?: string;
+  nextStop: string;
+  progress: number;
+  line: string;
+}
+
+interface DepartureStation {
+  id: string;
+  name: string;
+}
+```
+
+## Generic helpers
+
+`storage.ts` exposes two generic read/write helpers used throughout the app:
+
+```typescript
+// Read a value; returns fallback if the key is missing or unparseable
+loadFromStorage<T>(key: string, fallback: T): T
+
+// Write a value, then fire syncKeyToCloud()
+saveToStorage<T>(key: string, data: T): void
+```
+
+`saveToStorage` calls `syncKeyToCloud` after every write. `syncKeyToCloud` checks for an active Supabase session and silently no-ops if the user is not authenticated.
+
+## Window events
+
+Every meaningful write dispatches a custom window event so components can reactively update without a shared store:
+
+| Event | Fired when |
+|-------|-----------|
+| `recent-stops-changed` | Recent stops list is updated |
+| `recent-connections-changed` | Recent connections list is updated |
+| `liked-routes-changed` | A route is bookmarked or removed |
+| `active-routes-changed` | An active route is added or cleared |
+| `commuter-routes-changed` | Commuter routes are saved |
+| `quick-access-changed` | Quick access items are updated |
+| `departure-stations-changed` | Departure stations are updated |
+| `theme-changed` | Theme preference is changed |
+| `language-changed` | Language preference is changed |
+
+Components subscribe with:
+
+```typescript
+useEffect(() => {
+  const handler = () => { /* re-read from storage */ };
+  window.addEventListener('liked-routes-changed', handler);
+  return () => window.removeEventListener('liked-routes-changed', handler);
+}, []);
+```
+
+## Cloud sync
+
+Two functions handle full bidirectional sync:
+
+```typescript
+// Push all localStorage data to Supabase (called on significant local changes)
+syncAllToSupabase(): Promise<void>
+
+// Pull all Supabase data into localStorage (called on login)
+syncAllFromSupabase(): Promise<void>
+```
+
+Incremental sync (`syncKeyToCloud`) runs automatically after every `saveToStorage` call when the user is authenticated. It maps each storage key to the corresponding Supabase table:
+
+| Key | Supabase table |
+|-----|---------------|
+| `THEME_MODE`, `LANGUAGE`, `NOTIFICATIONS`, `PRIVACY_*` | `user_preferences` |
+| `RECENT_STOPS` | `user_stops` |
+| `RECENT_CONNECTIONS` | `user_connections` |
+| `QUICK_ACCESS` | `quick_access` |
+| `COMMUTER_ROUTES` | `commuter_routes` |
+| `LIKED_ROUTES` | `liked_routes` |
+| `ACTIVE_ROUTES` | `active_routes` |
+| `DEPARTURE_STATIONS` | `departure_stations` |
+
+<Note>
+  Sync is fire-and-forget. It never blocks the UI. If a sync fails, the data remains intact in localStorage and will sync again on the next write or login.
+</Note>
+
+## Itinerary storage
+
+Active route itineraries are stored separately to keep the `ACTIVE_ROUTES` list lean. Each itinerary is keyed by route ID:
+
+```typescript
+saveFollowedItinerary(itinerary: any): void
+loadFollowedItinerary(): any | null
+clearFollowedItinerary(): void
+
+saveRouteItinerary(routeId: string, itinerary: any): void
+loadRouteItinerary(routeId: string): any | null
+removeRouteItinerary(routeId: string): void
+```
+
+These use the keys `smartmove-followed-itinerary` and `smartmove-route-itin-{routeId}` respectively.
+
+<CardGroup cols={2}>
+  <Card title="Database schema" icon="table" href="/technical/database-schema">
+    Supabase table definitions and column types.
+  </Card>
+  <Card title="Row level security" icon="lock" href="/technical/row-level-security">
+    How RLS policies isolate user data.
+  </Card>
+</CardGroup>

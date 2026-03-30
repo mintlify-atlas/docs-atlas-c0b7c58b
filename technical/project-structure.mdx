@@ -1,0 +1,102 @@
+---
+title: "Project structure"
+description: "Directory layout for SmartMove: where to find components, services, styles, translations, and configuration."
+---
+
+SmartMove follows a flat, feature-grouped structure under `src/app/`. All screens are components; shared logic lives in `services/`.
+
+## Directory tree
+
+```
+SmartMoveNewUI/
+├── src/
+│   ├── main.tsx                        # App entry point
+│   ├── styles/
+│   │   └── theme.css                   # Tailwind theme tokens (light/dark)
+│   └── app/
+│       ├── routes.ts                   # React Router configuration
+│       ├── components/
+│       │   ├── Layout.tsx              # App shell and navigation
+│       │   ├── HomeScreen.tsx          # Route search with autocomplete
+│       │   ├── ResultsScreen.tsx       # Connection results and filtering
+│       │   ├── RouteDetailScreen.tsx   # Detailed trip view with sharing
+│       │   ├── LiveMapScreen.tsx       # Interactive transit map with GPS
+│       │   ├── DepartureBoard.tsx      # Real-time departure board
+│       │   ├── CommuterMode.tsx        # Saved commuter routes
+│       │   ├── ServiceAlerts.tsx       # Disruption alerts widget
+│       │   ├── ServiceAlertsPage.tsx   # Full alerts page with filtering
+│       │   ├── AccountScreen.tsx       # User profile and settings
+│       │   ├── LoginScreen.tsx         # Authentication
+│       │   ├── SignUpScreen.tsx        # Registration
+│       │   ├── ForgotPasswordScreen.tsx
+│       │   ├── ResetPasswordScreen.tsx
+│       │   └── account/               # Settings sub-pages
+│       │       ├── FavoritenScreen.tsx         # /account/favoriten
+│       │       ├── LetzteRoutenScreen.tsx       # /account/letzte-routen
+│       │       ├── MitteilungenScreen.tsx       # /account/mitteilungen
+│       │       ├── SpracheScreen.tsx            # /account/sprache
+│       │       ├── DatenschutzScreen.tsx        # /account/datenschutz
+│       │       └── HilfeScreen.tsx             # /account/hilfe
+│       ├── i18n/
+│       │   ├── index.ts               # Translation hook and utilities
+│       │   ├── de.json                # German (default)
+│       │   ├── it.json                # Italian
+│       │   ├── en.json                # English
+│       │   └── lad.json               # Ladin (Gherdëina)
+│       └── services/
+│           ├── efa.ts                 # EFA transit API integration
+│           ├── storage.ts             # localStorage + Supabase sync
+│           ├── supabase.ts            # Supabase client
+│           └── notificationService.ts # Push notifications
+├── vite.config.ts
+├── package.json
+└── .env.local                         # Environment variables (not committed)
+```
+
+## Key files
+
+### `src/main.tsx`
+
+The application entry point. Mounts the React app and wraps it with the router provider.
+
+### `src/styles/theme.css`
+
+Tailwind CSS 4 theme tokens. Defines the color palette, radius, and spacing for both light and dark modes. This is the single place to update brand colors or dark mode values.
+
+### `src/app/routes.ts`
+
+All React Router 7 route definitions using `createBrowserRouter`. Add new routes here. See the [architecture page](/technical/architecture#routing) for the full route table.
+
+### `src/app/services/efa.ts`
+
+EFA API integration. Exports `searchStopsEfa`, `searchLocations`, and all functions that fetch connections, departures, and service alerts from `efa.sta.bz.it`.
+
+### `src/app/services/storage.ts`
+
+Centralized persistence layer. All reads from and writes to localStorage go through this file. Handles cloud sync with Supabase and dispatches window events on writes.
+
+### `src/app/services/supabase.ts`
+
+Supabase JS client, initialized from `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`. Imported by `storage.ts` and auth components.
+
+### `src/app/i18n/index.ts`
+
+Custom translation hook. Exports `useTranslation()` and `t()`. Reading the active language from localStorage and merging translation keys from the appropriate JSON file.
+
+## Path alias
+
+Vite maps `@` to `./src`, so you can import from anywhere in the project without relative path traversal:
+
+```typescript
+import { searchStopsEfa } from '@/app/services/efa';
+import { KEYS, saveToStorage } from '@/app/services/storage';
+```
+
+<CardGroup cols={2}>
+  <Card title="Development setup" icon="terminal" href="/technical/development-setup">
+    Install dependencies and start the dev server.
+  </Card>
+  <Card title="Architecture" icon="diagram-project" href="/technical/architecture">
+    How the pieces fit together at runtime.
+  </Card>
+</CardGroup>

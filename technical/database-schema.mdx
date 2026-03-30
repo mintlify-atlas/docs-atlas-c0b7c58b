@@ -1,0 +1,176 @@
+---
+title: "Database schema"
+description: "Supabase PostgreSQL tables used by SmartMove for cloud sync: columns, types, and relationships."
+---
+
+SmartMove uses Supabase (PostgreSQL) to sync user data across devices when a user is authenticated. All tables are in the public schema and have Row Level Security enabled.
+
+<Note>
+  The full migration SQL is in `supabase_migration_relational_db.sql` at the repository root.
+</Note>
+
+## Tables
+
+### `user_preferences`
+
+Stores theme, language, and privacy settings per user.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `user_id` | `uuid` | References `auth.users`. Primary key. |
+| `theme_mode` | `text` | `light`, `dark`, or `system` |
+| `language` | `text` | Locale code: `de`, `it`, `en`, or `lad` |
+| `notifications` | `boolean` | Push notification preference |
+| `privacy_location` | `boolean` | Location sharing consent |
+| `privacy_analytics` | `boolean` | Analytics consent |
+
+One row per user. Writes use `upsert` with `onConflict: 'user_id'`.
+
+---
+
+### `user_stops`
+
+Recent stops visited by the user, with optional favorite flag.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `name` | `text` | Stop display name |
+| `gtfs_id` | `text` | GTFS stop identifier (nullable) |
+| `lat` | `float8` | Latitude (nullable) |
+| `lon` | `float8` | Longitude (nullable) |
+| `is_favorite` | `boolean` | Whether this stop is bookmarked |
+| `last_visited_at` | `timestamptz` | When the stop was last used |
+
+Sync strategy: delete all rows for the user, then insert the current localStorage array.
+
+---
+
+### `user_connections`
+
+Recent origin–destination pairs searched by the user.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `from_name` | `text` | Departure stop name |
+| `to_name` | `text` | Destination stop name |
+| `from_gtfs_id` | `text` | Departure stop GTFS ID (nullable) |
+| `to_gtfs_id` | `text` | Destination stop GTFS ID (nullable) |
+| `from_lat` | `float8` | Departure latitude (nullable) |
+| `from_lon` | `float8` | Departure longitude (nullable) |
+| `to_lat` | `float8` | Destination latitude (nullable) |
+| `to_lon` | `float8` | Destination longitude (nullable) |
+| `is_favorite` | `boolean` | Whether this connection is bookmarked |
+| `last_searched_at` | `timestamptz` | When the connection was last searched |
+
+---
+
+### `quick_access`
+
+Pinned items shown in the quick access widget on the home screen.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `item_id` | `text` | Client-assigned item identifier |
+| `name` | `text` | Display name |
+| `type` | `text` | `stop`, `line`, or `route` |
+| `type_label` | `text` | Localized type label |
+| `position` | `int4` | Display order |
+
+---
+
+### `commuter_routes`
+
+Routes saved in Commuter Mode for one-tap access.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `route_data` | `jsonb` | Full commuter route object |
+| `position` | `int4` | Display order |
+
+---
+
+### `liked_routes`
+
+Bookmarked routes saved by the user.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `route_id` | `text` | Client-assigned route identifier |
+| `from_name` | `text` | Departure stop name |
+| `to_name` | `text` | Destination stop name |
+| `mode` | `text` | `train`, `bus`, or `seilbahn` |
+| `duration` | `text` | Journey duration string |
+| `trip_data` | `jsonb` | Full itinerary for reopening the route |
+
+---
+
+### `active_routes`
+
+Routes currently being followed by the user.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `route_id` | `text` | Client-assigned route identifier |
+| `from_name` | `text` | Departure stop name |
+| `to_name` | `text` | Destination stop name |
+| `mode` | `text` | Transport mode |
+| `departure_time` | `text` | Scheduled departure time |
+| `arrival_time` | `text` | Scheduled arrival time |
+| `status` | `text` | `on-time`, `delayed`, or `boarding` |
+| `status_label` | `text` | Localized status string |
+| `delay` | `text` | Delay amount (nullable) |
+| `next_stop` | `text` | Name of the next stop |
+| `progress` | `float8` | Journey progress 0–1 |
+| `line` | `text` | Line identifier |
+
+---
+
+### `departure_stations`
+
+Stops pinned to the departure board.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `user_id` | `uuid` | References `auth.users` |
+| `station_id` | `text` | Stop identifier from EFA |
+| `name` | `text` | Stop display name |
+| `position` | `int4` | Display order |
+
+---
+
+### `route_shares`
+
+Short link records created when a user shares a route.
+
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | `uuid` | Primary key |
+| `short_id` | `text` | Short link identifier (used in `/r/:id`) |
+| `trip_data` | `jsonb` | Full itinerary payload |
+| `created_at` | `timestamptz` | When the share was created |
+
+<Note>
+  `route_shares` does not have a `user_id` column. Rows are readable by anyone, which allows shared links to work without authentication.
+</Note>
+
+<CardGroup cols={2}>
+  <Card title="Row level security" icon="lock" href="/technical/row-level-security">
+    How RLS policies are configured for each table.
+  </Card>
+  <Card title="Data persistence" icon="database" href="/technical/data-persistence">
+    How localStorage maps to these Supabase tables.
+  </Card>
+</CardGroup>

@@ -1,0 +1,76 @@
+---
+title: "Introduction"
+description: "SmartMove is a real-time public transit companion for South Tyrol (Südtirol / Alto Adige)."
+---
+
+SmartMove gives you instant access to connections across the entire South Tyrol transit network — trains, buses, cable cars, and the Bolzano tram — with live departure data, GPS route following, and service alerts. It works fully in your browser with no installation required.
+
+## What SmartMove covers
+
+SmartMove connects to the official South Tyrol transit authority API (`efa.sta.bz.it`) and covers all major operators and modes:
+
+- **Trains** — SAD regional trains and Trenitalia services throughout South Tyrol
+- **Buses** — SASA urban buses (Bolzano/Merano) and SAD regional coaches
+- **Cable cars** — Gondola and aerial tramway connections (Seilbahn)
+- **Bolzano tram** — City tram network within Bolzano
+
+## Key features
+
+**Route search** — Find optimal connections across all transit modes. Filter by speed, transfer count, walking distance, and more.
+
+**Live map** — An interactive Leaflet map shows every stop in the network. Tap any stop for real-time departures, delay info, and platform details.
+
+**Departure board** — See live departures for any stop, including delay indicators.
+
+**Route following** — Follow an active journey in real time with walking progress tracking and next-stop notifications.
+
+**Commuter mode** — Save your frequent routes for one-tap access to the next available connection.
+
+**Service alerts** — Live disruption reports, warnings, and informational messages from the transit network.
+
+**Favorites and sharing** — Bookmark stops, connections, and routes. Share any route via a short link.
+
+## Offline-first design
+
+SmartMove stores all your data locally using your browser's `localStorage`. You do not need an account to use the app. Everything — recent stops, saved routes, preferences — is available immediately and works without a network connection to SmartMove servers.
+
+<Note>
+  Creating a free account enables optional cloud sync via Supabase, so your favorites, commuter routes, and settings stay in sync across all your devices.
+</Note>
+
+## Languages
+
+SmartMove fully supports four languages:
+
+| Language | Code |
+|----------|------|
+| German (Deutsch) | `de` |
+| Italian (Italiano) | `it` |
+| English | `en` |
+| Ladin (Gherdëina) | `lad` |
+
+Stop name lookups from the EFA API adapt to your selected language (German or Italian). Ladin and English fall back to German for transit data.
+
+## Tech stack
+
+| Layer | Technology |
+|-------|------------|
+| Framework | React 18 + React Router 7 |
+| Build tool | Vite 6 |
+| Styling | Tailwind CSS 4 + Radix UI primitives |
+| Maps | Leaflet + React-Leaflet |
+| Auth & database | Supabase (PostgreSQL + Auth + RLS) |
+| Animations | Motion (Framer Motion) |
+| Transit data | EFA API (`efa.sta.bz.it`) |
+| Hosting | Vercel |
+
+## Next step
+
+<CardGroup cols={2}>
+  <Card title="Quick start" icon="rocket" href="/quickstart">
+    Open the app and search your first connection in minutes.
+  </Card>
+  <Card title="Configuration" icon="gear" href="/configuration">
+    Set up environment variables for optional cloud sync.
+  </Card>
+</CardGroup>
